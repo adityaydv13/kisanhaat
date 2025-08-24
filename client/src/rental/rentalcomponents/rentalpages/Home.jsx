@@ -3,8 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./styling/Header.css";
 import axios from "axios";
-import { set } from "mongoose";
-
+ 
 const Hhome = () => {
   const navigate = useNavigate();
   const [query,setQuery] = React.useState("");
