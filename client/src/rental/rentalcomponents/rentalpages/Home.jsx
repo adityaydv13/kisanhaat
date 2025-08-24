@@ -1,0 +1,70 @@
+ 
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./styling/Header.css";
+
+const Hhome = () => {
+  const navigate = useNavigate();
+
+ const handleCategoryClick = (category) => {
+    navigate(`/category/${category}`);
+  };
+
+  return (
+    <div className="homepage">
+      {/* Navbar */}
+      <nav className="navbar">
+        <div className="navbar-logo">
+          <img src="/assets/logo.png" alt="Kisan Haat Logo" />
+          <span>KisanHaat</span>
+        </div>
+        <div className="navbar-links">
+          <button onClick={() => navigate("/machinerylist")}>Add Machine</button>
+          <button onClick={() => navigate("/hire-machine")}>Hire Machine</button>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <div className="hero-section">
+        <img src="/assets/ground.jpg" alt="Background" className="hero-image" />
+        <div className="hero-text">
+          <h1>Agriculture Machinery Rental</h1>
+          <p>Empowering Farmers to Access Modern Machinery Easily</p>
+        </div>
+      </div>
+
+      {/* Gallery / Categories */}
+     <section className="categories-section">
+        <h2>Explore Machinery Categories</h2>
+        <div className="gallery">
+          <div className="gallery-card" onClick={() => handleCategoryClick("ploughing")}>
+            <img src="/assets/plouhing.jpg" alt="Ploughing" />
+            <div className="gallery-caption">Ploughing Machines</div>
+          </div>
+          <div className="gallery-card" onClick={() => handleCategoryClick("tractor")}>
+            <img src="/assets/tractor.jpg" alt="Tractor" />
+            <div className="gallery-caption">Tractors</div>
+          </div>
+          <div className="gallery-card" onClick={() => handleCategoryClick("harvester")}>
+            <img src="/assets/harvester.jpg" alt="Harvester" />
+            <div className="gallery-caption">Harvesters</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact & Inquiry Section */}
+      <section className="contact-section">
+        <h2>Contact & Inquiry</h2>
+        <p>Have any questions or need assistance? Fill the form below and we will get back to you.</p>
+        <form className="contact-form">
+          <input type="text" placeholder="Your Name" required />
+          <input type="text" placeholder="Phone Number" required />
+          <textarea placeholder="Your Message" rows="4" required></textarea>
+          <button type="submit">Send Enquiry</button>
+        </form>
+      </section>
+    </div>
+  );
+};
+
+export default Hhome;

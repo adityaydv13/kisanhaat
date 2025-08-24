@@ -1,0 +1,142 @@
+/* Container */
+.machinery-detail-container {
+    width: 90%;
+    max-width: 800px;
+    background: rgba(30, 30, 30, 0.9);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    margin: 50px auto;
+    overflow: hidden;
+}
+
+/* Titles */
+.machinery-detail-container h2 {
+    text-align: center;
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Search Box */
+.search-box {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    width: 60%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    background: #252525;
+    color: white;
+    outline: none;
+    transition: 0.3s;
+}
+
+.search-box input:focus {
+    border: 1px solid #299140;
+    background: #2e2e2e;
+}
+
+.search-box button {
+    background-color: #299140;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    /* transition: background 0.3s; */
+}
+
+.search-box button:hover {
+    background-color: #218838;
+}
+
+/* Machine Details */
+.machine-details {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+    text-align: center;
+}
+
+.machine-details h3 {
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.machine-details p {
+    color: #bbbbbb;
+    margin: 8px 0;
+}
+
+.add-cart-btn {
+    background-color: #ff9800;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    /* transition: background 0.3s; */
+    display: block;
+    margin: 10px auto 0;
+}
+
+.add-cart-btn:hover {
+    background-color: #e68900;
+}
+
+/* Cart Section */
+.cart-container  {
+    margin-top: 30px;
+}
+
+.cart-container h2 {
+    text-align: center;
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.cart-container button {
+    background-color: #ff9800;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    /* transition: background 0.3s; */
+    display: block;
+    margin: 10px auto 0;
+}
+
+.cart-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.cart-list li {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.cart-list li strong {
+    font-size: 18px;
+}

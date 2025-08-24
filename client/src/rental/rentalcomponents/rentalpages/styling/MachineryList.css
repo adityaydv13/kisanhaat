@@ -1,0 +1,112 @@
+/* Container */
+.machine-list-container {
+    width: 90%;
+    max-width: 800px;
+    background: rgba(30, 30, 30, 0.9);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    margin: 50px auto;
+    overflow: hidden;
+}
+
+/* Titles */
+h2, h3 {
+    text-align: center;
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* Form Styling */
+.machine-list-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    background: rgba(50, 50, 50, 0.8);
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Input Fields */
+.machine-list-form input,
+.machine-list-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    background: #252525;
+    color: white;
+    outline: none;
+    transition: 0.3s;
+}
+
+.machine-list-form input:focus,
+.machine-list-form textarea:focus {
+    border: 1px solid #299140;
+    background: #2e2e2e;
+}
+
+/* Submit Button */
+.machine-list-form button {
+    background-color: #299140;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.machine-list-form button:hover {
+    background-color: #218838;
+}
+
+/* Machine List */
+.machine-list {
+    margin-top: 20px;
+}
+
+.machine-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.machine-list li {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.machine-list li strong {
+    font-size: 18px;
+    color: #ffffff;
+}
+
+.machine-list p {
+    margin: 5px 0;
+    color: #bbbbbb;
+}
+
+/* Delete Button */
+.delete-btn {
+    background-color: #dc3545;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
