@@ -135,7 +135,15 @@
 // export default Home;
 
 
-const Home = ({ userRole }) => {
+import React, { useEffect, useState } from 'react';
+import Hero from '../component/Hero'; 
+import Farmer from '../component/Farmer'; 
+import Contractor from '../component/Contractor'; 
+import axios from 'axios'; 
+import Testimonials from '../component/Testimonials'; 
+import Footer from '../component/Footer';
+
+const Home = ({ userRole }) => { // Receive userRole from App.jsx
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -161,8 +169,10 @@ const Home = ({ userRole }) => {
 
   return (
     <div>
+      {/* Show Farmer or Contractor UI based on role from App.jsx */}
       {userRole === "farmer" ? <Farmer /> : <Contractor />}
 
+      {/* Show common landing page if not logged in */}
       {!localStorage.getItem("token") && (
         <div>
           <Hero />
@@ -175,3 +185,5 @@ const Home = ({ userRole }) => {
     </div>
   );
 };
+
+export default Home;
