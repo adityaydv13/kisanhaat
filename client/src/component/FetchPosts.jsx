@@ -20,7 +20,7 @@ const FetchPosts = () => {
       // Add random dates and durations to each post
       const postsWithDates = response.data.map(post => ({
         ...post,
-        createdAt: generateRandomDate(new Date(2024, 0, 1), new Date()),
+        createdAt: new Date(Date.now()), // Random date within last 30 days
         dealDuration: Math.floor(Math.random() * 6) + 1 // Random duration between 1 and 6 months
       }));
       setPosts(postsWithDates);
@@ -31,9 +31,9 @@ const FetchPosts = () => {
     }
   };
 
-  const generateRandomDate = (start, end) => {
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  };
+  // const generateRandomDate = (start, end) => {
+  //   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  // };
 
   const openModal = (post) => {
     setCurrentPost(post);

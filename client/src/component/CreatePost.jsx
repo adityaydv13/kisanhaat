@@ -48,14 +48,14 @@ const CreatePost = () => {
   const handleConfirm = async () => {
     try {
       if (isEditing) {
-        await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${editingPostId}`, formData, {
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/posts/${editingPostId}`, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         alert('Post updated successfully!');
       } else {
-        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/posts/`, formData, {
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/posts/`, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -104,7 +104,7 @@ const CreatePost = () => {
 
   const handleDelete = async (postId) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${postId}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/posts/${postId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -118,7 +118,7 @@ const CreatePost = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/posts/`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

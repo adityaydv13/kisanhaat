@@ -18,7 +18,7 @@ const Profile = ({ handleLogout }) => {
       {/* ) : role === 'contractor' ? ( */}
         <ContractorDash handleLogout={handleLogout} />
       {/* ) : ( */}
-        <p>Loading...</p> // Or redirect if role is invalid
+        <p>Loading...</p>  
       {/* )} */}
     </div>
   );
