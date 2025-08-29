@@ -26,7 +26,7 @@ const handleHire = (machineId) => {
 
   axios.post(
     `${import.meta.env.VITE_API_URL}/api/hire`,
-    { machineId, requesterName: user },  // ✅ fixed
+    { machineId },  // ✅ fixed
     {
       headers: {
         Authorization: `Bearer ${token}`,
