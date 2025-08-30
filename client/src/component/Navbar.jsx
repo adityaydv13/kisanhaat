@@ -139,12 +139,9 @@ const userId = userString ? JSON.parse(userString)._id : null;
         navigate("/");
       }}
     >
-      {/* <button className="btn btn-warning w-full"> */}
-        Delete Account
-      {/* </button> */}
-    </DeleteAccount>
-    {/*  */}
-
+         Delete Account
+     </DeleteAccount>
+ {/*  */}
                 <button
                   className="btn btn-error w-full"
                   onClick={() => {
@@ -237,8 +234,7 @@ const userId = userString ? JSON.parse(userString)._id : null;
                 >
                   Switch Role
                 </button>
-                {/*  */}
-                 <DeleteAccount
+                  <DeleteAccount
       token={localStorage.getItem("token")}
       userId={userId}  
       onDelete={() => {
@@ -249,10 +245,8 @@ const userId = userString ? JSON.parse(userString)._id : null;
         navigate("/");
       }}
     >
-      {/* <button className="btn btn-warning w-full"> */}
-        Delete Account
-      {/* </button> */}
-    </DeleteAccount>
+         Delete Account
+     </DeleteAccount>
     {/*  */}
                 <button
                   className="btn btn-error w-full"

@@ -1,25 +1,4 @@
-// import axios from "axios";
-
-// const DeleteAccount = ({ token, userId, onDelete, children }) => {
-//   const handleDelete = async () => {
-//     try {
-//       await axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-
-//       if (onDelete) onDelete();
-//       window.location.href = "/login"; // redirect after deletion
-//     } catch (err) {
-//       console.error("Error deleting account:", err);
-//     }
-//   };
-
-//   return (
-//     <button   onClick={handleDelete}>
-//       {children}
-//     </button>
-//   );
-// };
+ 
 
 // export default DeleteAccount;
 import { useState } from "react";
@@ -60,8 +39,6 @@ const DeleteAccount = ({ token, userId, onDelete, children }) => {
 <p className="mb-6 text-green-600">
   Are you sure you want to delete your account? This action cannot be undone.
 </p>
-
-
             <div className="flex justify-between space-x-4">
               <button
                 className="btn btn-gray w-1/2"

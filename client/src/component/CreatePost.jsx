@@ -291,7 +291,7 @@ const FarmerPosts = ({ token, onDelete, onUpdate }) => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/posts/', {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
