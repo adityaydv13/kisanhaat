@@ -9,6 +9,7 @@ const FetchPosts = () => {
   const [bidAmount, setBidAmount] = useState('');
 
   const token = localStorage.getItem('token');
+  console.log("Token in FetchPosts:", token);
 
   const fetchPosts = async () => {
     try {
@@ -30,10 +31,7 @@ const FetchPosts = () => {
       setLoading(false);
     }
   };
-
-  // const generateRandomDate = (start, end) => {
-  //   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  // };
+ 
 
   const openModal = (post) => {
     setCurrentPost(post);
@@ -45,22 +43,41 @@ const FetchPosts = () => {
     setBidAmount('');
   };
 
-  const submitBid = async () => {
-    if (!currentPost) return;
+  // const submitBid = async () => {
+  //   if (!currentPost) return;
+  //  console.log("Token being sent:", token);
+  //   try {
+  //     await axios.post(`${import.meta.env.VITE_API_URL}/api/crops/bids`, 
+  //       { postId: currentPost._id, bidAmount },
+  //       { headers: { Authorization: `Bearer ${token}` } }
+  //     );
+  //     alert('Bid sent successfully!');
+  //   } catch (error) {
+  //     console.error('Error sending bid:', error);
+  //     alert('Error sending bid. Please try again.');
+  //   } finally {
+  //     closeModal();
+  //   }
+  // };
+const submitBid = async () => {
+  if (!currentPost) return;
+    
+  console.log("Token being sent:", token);
 
-    try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/bids/`, 
-        { postId: currentPost._id, bidAmount },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      alert('Bid sent successfully!');
-    } catch (error) {
-      console.error('Error sending bid:', error);
-      alert('Error sending bid. Please try again.');
-    } finally {
-      closeModal();
-    }
-  };
+  try {
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/crops/bids`,
+      { postId: currentPost._id, bidAmount },
+      { headers: { Authorization: `Bearer ${token}` } } // or just token depending on backend
+    );
+    alert("Bid sent successfully!");
+  } catch (error) {
+    console.error("Error sending bid:", error.response?.data || error.message);
+    alert("Error sending bid. Please try again.");
+  } finally {
+    closeModal();
+  }
+};
 
   useEffect(() => {
     fetchPosts();

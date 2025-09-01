@@ -113,6 +113,11 @@ const userId = userString ? JSON.parse(userString)._id : null;
               Requests
             </Link>
 
+            {/* bids  */}
+
+
+            <li><Link to="/received-bids">Received Bids</Link></li>
+
             {isLoggedIn ? (
               <>
                 <span className="font-medium">Hi, {userName}</span>
@@ -142,6 +147,8 @@ const userId = userString ? JSON.parse(userString)._id : null;
          Delete Account
      </DeleteAccount>
  {/*  */}
+          
+
                 <button
                   className="btn btn-error w-full"
                   onClick={() => {
@@ -248,6 +255,11 @@ const userId = userString ? JSON.parse(userString)._id : null;
          Delete Account
      </DeleteAccount>
     {/*  */}
+
+            <Link to="/received-bids">Received Bids</Link>
+            <Link to="/my-bids">My Bids</Link>
+                 
+
                 <button
                   className="btn btn-error w-full"
                   onClick={() => {
