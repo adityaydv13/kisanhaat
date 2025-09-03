@@ -60,6 +60,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import  CheckoutButton  from "./CheckoutButton"; 
 
+// razorpay 
+import RazorpayButton from "./RazorpayButton"
+
 const MyBids = () => {
   const [bids, setBids] = useState([]);
   const token = localStorage.getItem("token");
@@ -94,6 +97,13 @@ const MyBids = () => {
           {bid.status === "ACCEPTED" && (
             <CheckoutButton bidId={bid._id} initialAmount={bid.bidAmount} />
           )}
+
+          {/* razorpay */}
+
+          {bid.status === "ACCEPTED" && (
+            <RazorpayButton bidId={bid._id} initialAmount={bid.bidAmount} />
+          )
+          }
         </div>
       ))}
     </div>
