@@ -306,19 +306,52 @@ const Navbar = ({ handleLogout, onSwitchRole }) => {
   const userString = localStorage.getItem("user");
   const userId = userString ? JSON.parse(userString)._id : null;
 
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     try {
+  //       const decoded = jwtDecode(token);
+  //       setIsLoggedIn(true);
+  //       setUserName(decoded?.name || decoded?.username || "User");
+  //     } catch {
+  //       setIsLoggedIn(false);
+  //       setUserName("");
+  //     }
+  //   }
+  // }, []);
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
+  // 1️⃣ Prefer user object stored in localStorage
+  const storedUser = localStorage.getItem("user");
+
+  if (storedUser) {
+    try {
+      const userObj = JSON.parse(storedUser);
+      if (userObj?.name) {
         setIsLoggedIn(true);
-        setUserName(decoded?.name || decoded?.username || "User");
-      } catch {
-        setIsLoggedIn(false);
-        setUserName("");
+        setUserName(userObj.name);
+        return; // stop further checks
       }
+    } catch (err) {
+      console.error("Failed to parse stored user:", err);
     }
-  }, []);
+  }
+
+  // 2️⃣ Fallback to decoding JWT
+  const token = localStorage.getItem("token");
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      setIsLoggedIn(true);
+      setUserName(decoded?.name || "User");
+    } catch {
+      setIsLoggedIn(false);
+      setUserName("");
+    }
+  }
+}, []);
+
+// changed till here
+
 
   useEffect(() => {
     const handleClickOutside = (e) => {
