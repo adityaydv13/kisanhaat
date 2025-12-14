@@ -128,6 +128,7 @@ const CreatePost = () => {
       console.error('Error fetching posts:', error);
     }
   };
+  
 
   useEffect(() => {
     fetchPosts();
@@ -289,9 +290,21 @@ const FarmerPosts = ({ token, onDelete, onUpdate }) => {
     fetchPosts();
   }, []);
 
+  // const fetchPosts = async () => {
+  //   try {
+  //     const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     setPosts(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching posts:', error);
+  //   }
+  // };
   const fetchPosts = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/my-posts/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
