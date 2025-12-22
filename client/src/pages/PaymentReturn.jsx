@@ -18,14 +18,14 @@ const PaymentReturn = () => {
         );
 
         setRaw(data);
-        const code = data?.data?.code;          // e.g. "PAYMENT_SUCCESS"
-        const statusText = data?.data?.data?.state; // e.g. "COMPLETED"
+        const code = data?.data?.code;          
+        const statusText = data?.data?.data?.state; 
         if (code === "PAYMENT_SUCCESS" || statusText === "COMPLETED") {
           setStatus("Payment Successful ✅");
         } else if (statusText === "PENDING") {
           setStatus("Payment Pending ⏳");
         } else {
-          setStatus("Payment Failed ❌");
+          setStatus("Payment Failed");
         }
       } catch (e) {
         console.error(e);
