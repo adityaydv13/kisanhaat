@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import FarmerSell from './FarmerSell';
-import farmer3 from '../assets/image/farmer3.jpg'
 
 import Vegetables from '../assets/image/Vegetables.png';
 import Pulses from '../assets/image/Pulses.png';
@@ -28,16 +27,13 @@ const CreatePost = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingPostId, setEditingPostId] = useState(null);
-  const [posts, setPosts] = useState([]);
-  
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [submitStatus, setSubmitStatus] = useState(null);
   const token = localStorage.getItem('token');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    });
+    setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
   };
 
   const handleSubmit = (e) => {
@@ -48,42 +44,46 @@ const CreatePost = () => {
   const handleConfirm = async () => {
     try {
       if (isEditing) {
-        await axios.put(`${import.meta.env.VITE_API_URL}/api/posts/${editingPostId}`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const payload = {
+          ...formData,
+          plants: typeof formData.plants === 'string'
+            ? formData.plants.split(',').map(p => p.trim()).filter(Boolean)
+            : formData.plants,
+          amount: Number(formData.amount),
+          quantity: Number(formData.quantity),
+        };
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/posts/${editingPostId}`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        alert('Post updated successfully!');
+        setSubmitStatus({ type: "success", msg: "Post updated successfully!" });
       } else {
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/posts/`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const payload = {
+          ...formData,
+          plants: typeof formData.plants === 'string'
+            ? formData.plants.split(',').map(p => p.trim()).filter(Boolean)
+            : formData.plants,
+          amount: Number(formData.amount),
+          quantity: Number(formData.quantity),
+        };
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/posts/`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        alert('Posted successfully!');
+        setSubmitStatus({ type: "success", msg: "Posted successfully!" });
       }
       setIsModalOpen(false);
       resetForm();
-      fetchPosts(); // Refresh the posts after submit
+      setRefreshKey(k => k + 1);
+      setTimeout(() => setSubmitStatus(null), 3000);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      const msg = error.response?.data?.message || "Something went wrong. Please try again.";
+      setSubmitStatus({ type: "error", msg });
+      setIsModalOpen(false);
+      setTimeout(() => setSubmitStatus(null), 5000);
     }
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
   const resetForm = () => {
-    setFormData({
-      mobileNumber: '',
-      description: '',
-      plants: [],
-      amount: '',
-      quantity: '',
-      isActive: false,
-      itemType: 'vegetables',
-    });
+    setFormData({ mobileNumber: '', description: '', plants: [], amount: '', quantity: '', isActive: false, itemType: 'vegetables' });
     setIsEditing(false);
     setEditingPostId(null);
   };
@@ -100,180 +100,125 @@ const CreatePost = () => {
     });
     setIsEditing(true);
     setEditingPostId(post._id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (postId) => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/posts/${postId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setPosts((prevPosts) => prevPosts.filter(post => post._id !== postId));
-      alert('Post deleted successfully!');
+      setRefreshKey(k => k + 1);
+      setSubmitStatus({ type: "success", msg: "Post deleted!" });
+      setTimeout(() => setSubmitStatus(null), 2000);
     } catch (error) {
       console.error('Error deleting post:', error);
     }
   };
 
-  const fetchPosts = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setPosts(response.data);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    }
-  };
-  
-
-  useEffect(() => {
-    fetchPosts();
-  }, [token]);
-
   return (
-    <div className="p-4 lg:p-8">
+    <div className="px-4 lg:px-8 py-6 max-w-7xl mx-auto">
       <FarmerSell />
-      <div className="flex flex-col lg:flex-row lg:space-x-8">
-        <div className="w-full lg:w-1/2 mb-8 lg:mb-0">
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-            
-          <div className="relative bg-slate-50 text-white text-center py-4">
-  <img
-    src={farmer3}
-    alt="Background"
-    className="absolute inset-0 w-full h-full object-cover opacity-100" // Adjust opacity as needed
-  />
-  <div className="absolute inset-0 bg-black opacity-50"></div> {/* Black overlay */}
-  <h2 className="text-white text-2xl font-bold relative z-10">
-    {isEditing ? 'Update Post' : 'Create New Post'}
-  </h2>
-  <p className="text-white text-sm relative z-10">
-    Add or update your produce details here
-  </p>
-</div>
 
+      {/* Status Toast */}
+      {submitStatus && (
+        <div className={`fixed top-20 right-4 z-50 p-4 rounded-xl shadow-lg border animate-fade-up ${submitStatus.type === "success" ? "bg-green-50 border-green-200 text-green-700" : "bg-red-50 border-red-200 text-red-600"}`} role="alert">
+          <p className="text-sm font-medium">{submitStatus.msg}</p>
+        </div>
+      )}
 
-            <form onSubmit={handleSubmit} className="flex flex-col space-y-4 p-6">
-              <div className="flex flex-wrap gap-4">
-                <div className="flex-1">
-                  <label htmlFor="itemType" className="block text-sm font-medium text-gray-900">Select Item Type</label>
-                  <select
-                    id="itemType"
-                    name="itemType"
-                    value={formData.itemType}
-                    onChange={handleChange}
-                    className="block w-full rounded-md border-gray-300 py-2 px-3 text-gray-900 shadow-sm focus:border-[#0ca712] focus:ring-[#0ca712] sm:text-sm"
-                    required
-                  >
+      <div className="flex flex-col lg:flex-row gap-8 mt-8">
+        {/* Form */}
+        <div className="w-full lg:w-1/2">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-green-700 to-green-600 px-6 py-5">
+              <h2 className="text-xl font-bold text-white">
+                {isEditing ? 'Update Your Post' : 'Create New Listing'}
+              </h2>
+              <p className="text-green-100 text-sm mt-1">Add your produce details for contractors to bid</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="p-6 space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Item Type</label>
+                  <select name="itemType" value={formData.itemType} onChange={handleChange} className="input-base" required>
                     <option value="vegetables">Vegetables</option>
                     <option value="rice">Rice</option>
                     <option value="fruits">Fruits</option>
                     <option value="pulses">Pulses</option>
                   </select>
                 </div>
-                <div className="flex-1">
-                  <label htmlFor="mobileNumber" className="block text-sm font-medium text-gray-900">Mobile Number</label>
-                  <input
-                    type="text"
-                    id="mobileNumber"
-                    name="mobileNumber"
-                    value={formData.mobileNumber}
-                    onChange={handleChange}
-                    required
-                    className="block w-full rounded-md border-gray-300 py-2 px-3 text-gray-900 shadow-sm focus:border-[#0ca712] focus:ring-[#0ca712] sm:text-sm"
-                  />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Mobile Number</label>
+                  <input type="tel" name="mobileNumber" value={formData.mobileNumber} onChange={handleChange} placeholder="10-digit mobile" pattern="[0-9]{10}" title="Enter a 10-digit mobile number" className="input-base" required />
                 </div>
               </div>
+
               <div>
-                <label htmlFor="plants" className="block text-sm font-medium text-gray-900">Plants (comma-separated)</label>
-                <input
-                  type="text"
-                  id="plants"
-                  name="plants"
-                  value={formData.plants}
-                  onChange={handleChange}
-                  required
-                  className="block w-full rounded-md border-gray-300 py-2 px-3 text-gray-900 shadow-sm focus:border-[#0ca712] focus:ring-[#0ca712] sm:text-sm"
-                  placeholder="e.g., Tomato, Potato"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Plants (comma-separated)</label>
+                <input type="text" name="plants" value={formData.plants} onChange={handleChange} placeholder="e.g., Tomato, Potato" className="input-base" required />
               </div>
+
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-900">Description</label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  required
-                  className="block w-full rounded-md border-gray-300 py-2 px-3 text-gray-900 shadow-sm focus:border-[#0ca712] focus:ring-[#0ca712] sm:text-sm"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Description</label>
+                <textarea name="description" value={formData.description} onChange={handleChange} rows={3} placeholder="Describe your produce..." className="input-base" required />
               </div>
-              <div className="flex flex-wrap gap-4">
-                <div className="flex-1">
-                  <label htmlFor="amount" className="block text-sm font-medium text-gray-900">Amount (₹/Kg)</label>
-                  <input
-                    type="number"
-                    id="amount"
-                    name="amount"
-                    value={formData.amount}
-                    onChange={handleChange}
-                    required
-                    className="block w-full rounded-md border-gray-300 py-2 px-3 text-gray-900 shadow-sm focus:border-[#0ca712] focus:ring-[#0ca712] sm:text-sm"
-                  />
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Price (per Kg)</label>
+                  <input type="number" name="amount" value={formData.amount} onChange={handleChange} placeholder="0" className="input-base" required />
                 </div>
-                <div className="flex-1">
-                  <label htmlFor="quantity" className="block text-sm font-medium text-gray-900">Quantity (Kg)</label>
-                  <input
-                    type="number"
-                    id="quantity"
-                    name="quantity"
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    required
-                    className="block w-full rounded-md border-gray-300 py-2 px-3 text-gray-900 shadow-sm focus:border-[#0ca712] focus:ring-[#0ca712] sm:text-sm"
-                  />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Quantity (Kg)</label>
+                  <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} placeholder="0" className="input-base" required />
                 </div>
-                <div className="flex-1">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="isActive"
-                      checked={formData.isActive}
-                      onChange={handleChange}
-                      className="mr-2"
-                    />
-                    Active
+                <div className="flex items-end pb-1">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleChange} className="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500 focus:ring-2" />
+                    <span className="text-sm font-medium text-gray-700">Active</span>
                   </label>
                 </div>
               </div>
-              <button
-                type="submit"
-                className="bg-green-800 text-white px-4 py-2 rounded-md"
-              >
+
+              <button type="submit" className="btn-primary w-full py-3 text-sm">
                 {isEditing ? 'Update Post' : 'Create Post'}
               </button>
+              {isEditing && (
+                <button type="button" onClick={resetForm} className="w-full py-2.5 text-gray-600 hover:text-gray-800 font-medium text-sm transition-colors">
+                  Cancel Editing
+                </button>
+              )}
             </form>
           </div>
         </div>
-        <FarmerPosts token={token} onDelete={handleDelete} onUpdate={handleUpdate} />
+
+        {/* Posts List */}
+        <FarmerPosts token={token} refreshKey={refreshKey} onDelete={handleDelete} onUpdate={handleUpdate} />
       </div>
 
-      {/* Modal for confirmation */}
+      {/* Confirmation Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6">
-            <h2 className="text-lg font-bold">Confirmation</h2>
-            <p>{isEditing ? 'Are you sure you want to update this post?' : 'Are you sure you want to create this post?'}</p>
-            <div className="flex justify-end mt-4">
-              <button onClick={handleConfirm} className="bg-green-500 text-white px-4 py-2 rounded-md mr-2">
-                Yes
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 p-4" role="dialog" aria-modal="true">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-fade-up" style={{ animationDuration: "0.3s" }}>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Confirm {isEditing ? 'Update' : 'Post'}</h3>
+              <p className="text-sm text-gray-500 mb-6">
+                {isEditing ? 'Are you sure you want to update this post?' : 'Ready to publish this listing?'}
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => setIsModalOpen(false)} className="btn-secondary flex-1 py-2.5 text-sm">
+                Cancel
               </button>
-              <button onClick={handleCancel} className="bg-red-500 text-white px-4 py-2 rounded-md">
-                No
+              <button onClick={handleConfirm} className="btn-primary flex-1 py-2.5 text-sm">
+                Confirm
               </button>
             </div>
           </div>
@@ -283,72 +228,80 @@ const CreatePost = () => {
   );
 };
 
-const FarmerPosts = ({ token, onDelete, onUpdate }) => {
+const FarmerPosts = ({ token, refreshKey, onDelete, onUpdate }) => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/my-posts/`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setPosts(response.data);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchPosts();
-  }, []);
-
-  // const fetchPosts = async () => {
-  //   try {
-  //     const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     setPosts(response.data);
-  //   } catch (error) {
-  //     console.error('Error fetching posts:', error);
-  //   }
-  // };
-  const fetchPosts = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/my-posts/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setPosts(response.data);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    }
-  };
+  }, [token, refreshKey]);
 
   return (
-    <div className="w-full lg:w-1/2 lg:pl-4">
-      <h3 className="text-xl font-semibold mb-4">Your Previous Posts</h3>
-      <div className="space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto pr-2 ">
-        {posts.map((post) => {
-          const imageSrc = Vegetables  // Default image path
-          return (
-            <div key={post._id} className="bg-soft-beige-gradient  rounded-xl p-4 flex">
-              <img src={imageSrc} alt={post.itemType} className="w-16 h-16 mr-4 rounded-md" />
-              <div>
-                <p><strong>Description:</strong> {post.description}</p>
-                <p><strong>Plants:</strong> {post.plants.join(', ')}</p>
-                <p><strong>Amount:</strong> ₹{post.amount}/Kg</p>
-                <p><strong>Quantity:</strong> {post.quantity} Kg</p>
-                <p><strong>Status:</strong> {post.isActive ? 'Active' : 'Inactive'}</p>
-                <div className="mt-2">
-                  <button
-                    onClick={() => onDelete(post._id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded-md mr-2"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={() => onUpdate(post)}
-                    className="bg-[#0ca712] text-white px-3 py-1 rounded-md"
-                  >
-                    Update
-                  </button>
+    <div className="w-full lg:w-1/2">
+      <h3 className="text-xl font-bold text-gray-900 mb-4">Your Listings</h3>
+
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <div className="w-8 h-8 border-4 border-green-200 border-t-green-600 rounded-full animate-spin" />
+        </div>
+      ) : (
+        <div className="space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto pr-1">
+          {posts.length === 0 && (
+            <div className="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+              <svg className="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <p className="text-gray-500 text-sm">No listings yet. Create your first post!</p>
+            </div>
+          )}
+          {posts.map((post, i) => {
+            const imageSrc = itemImages[post.itemType] || Vegetables;
+            return (
+              <div
+                key={post._id}
+                className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex gap-4 hover:shadow-md transition-all duration-200 animate-fade-up"
+                style={{ animationDelay: `${i * 60}ms` }}
+              >
+                <img src={imageSrc} alt={post.itemType} className="w-16 h-16 rounded-lg object-cover flex-shrink-0" loading="lazy" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <h4 className="font-semibold text-gray-900 text-sm truncate">{post.plants?.join(', ')}</h4>
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${post.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                      {post.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1 line-clamp-1">{post.description}</p>
+                  <div className="flex items-center gap-3 mt-2 text-xs text-gray-600">
+                    <span className="font-medium">Rs. {post.amount}/Kg</span>
+                    <span>{post.quantity} Kg</span>
+                  </div>
+                  <div className="flex gap-2 mt-3">
+                    <button onClick={() => onUpdate(post)} className="btn-base px-3 py-1.5 text-xs bg-green-50 text-green-700 hover:bg-green-100 focus-visible:ring-green-400">
+                      Edit
+                    </button>
+                    <button onClick={() => onDelete(post._id)} className="btn-base px-3 py-1.5 text-xs bg-red-50 text-red-600 hover:bg-red-100 focus-visible:ring-red-400">
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

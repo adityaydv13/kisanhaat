@@ -1,82 +1,90 @@
-import React, { useState } from 'react';
-import { Transition } from '@headlessui/react'; // You can use this library for smooth transitions
+import { useState } from 'react';
+
+const faqData = [
+  {
+    question: 'How do I list my crops for sale?',
+    answer: 'After signing up as a farmer, go to the homepage and use the "Create New Listing" form. Fill in crop type, quantity, price per kg, and description. Contractors will be able to see and bid on your listing.'
+  },
+  {
+    question: 'How does the bidding system work?',
+    answer: 'Contractors browse active listings and place bids with their offered price. As a farmer, you can view all received bids and choose to accept or reject each one. Once accepted, the contractor can proceed with payment.'
+  },
+  {
+    question: 'What payment methods are supported?',
+    answer: 'KisanHaat uses Razorpay for secure transactions. Once a bid is accepted, the contractor can complete the payment directly from the platform.'
+  },
+  {
+    question: 'How does machinery rental work?',
+    answer: 'Visit the Rental section to browse or list agricultural machinery. Machine owners can post equipment with daily rates and location. Farmers can search, hire machines, and track their rental requests.'
+  },
+  {
+    question: 'Is my data secure on KisanHaat?',
+    answer: 'Yes. We use JWT-based authentication, encrypted passwords, and secure payment gateways. Your personal and financial information is protected at every step.'
+  },
+  {
+    question: 'Can I use both farmer and contractor roles?',
+    answer: 'Yes! Use the "Switch Role" button in the navigation to toggle between farmer and contractor views. This lets you both sell your produce and bid on others\' listings.'
+  }
+];
 
 const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState(null);
 
-  const toggleIndex = (index) => {
-    setActiveIndex(activeIndex === index ? null : index);
-  };
-
   return (
-    <main className="p-5 bg-light-blue">
-      <div className="flex justify-center items-start my-2">
-        <div className="w-full sm:w-10/12 md:w-1/2 my-1">
-          <h2 className="text-xl font-semibold text-vnet-blue mb-2">FAQ - Order, Contract Etc.</h2>
-          <ul className="flex flex-col">
-            {faqData.map((item, index) => (
-              <li key={index} className="bg-white my-2 shadow-lg">
-                <h2
-                  onClick={() => toggleIndex(index)}
-                  className="flex flex-row justify-between items-center font-semibold p-3 cursor-pointer"
+    <div className="min-h-screen bg-gray-50 py-16 px-4">
+      <div className="max-w-2xl mx-auto">
+        <div className="text-center mb-12 animate-fade-up">
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">Frequently Asked Questions</h1>
+          <p className="text-gray-500">Everything you need to know about KisanHaat</p>
+        </div>
+
+        <div className="space-y-3">
+          {faqData.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden animate-fade-up"
+              style={{ animationDelay: `${index * 80}ms` }}
+            >
+              <button
+                onClick={() => setActiveIndex(activeIndex === index ? null : index)}
+                className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-green-500"
+                aria-expanded={activeIndex === index}
+                aria-controls={`faq-answer-${index}`}
+              >
+                <span className="text-sm font-semibold text-gray-900 pr-4">{item.question}</span>
+                <svg
+                  className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-300 ${activeIndex === index ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
-                  <span>{item.question}</span>
-                  <svg
-                    className={`fill-current text-purple-700 h-6 w-6 transform transition-transform duration-500 ${activeIndex === index ? 'rotate-180' : ''}`}
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M13.962,8.885l-3.736,3.739c-0.086,0.086-0.201,0.13-0.314,0.13S9.686,12.71,9.6,12.624l-3.562-3.56C5.863,8.892,5.863,8.611,6.036,8.438c0.175-0.173,0.454-0.173,0.626,0l3.25,3.247l3.426-3.424c0.173-0.172,0.451-0.172,0.624,0C14.137,8.434,14.137,8.712,13.962,8.885 M18.406,10c0,4.644-3.763,8.406-8.406,8.406S1.594,14.644,1.594,10S5.356,1.594,10,1.594S18.406,5.356,18.406,10 M17.521,10c0-4.148-3.373-7.521-7.521-7.521c-4.148,0-7.521,3.374-7.521,7.521c0,4.147,3.374,7.521,7.521,7.521C14.148,17.521,17.521,14.147,17.521,10"></path>
-                  </svg>
-                </h2>
-                <Transition
-                  show={activeIndex === index}
-                  enter="transition-all duration-500"
-                  enterFrom="max-h-0"
-                  enterTo="max-h-screen"
-                  leave="transition-all duration-500"
-                  leaveFrom="max-h-screen"
-                  leaveTo="max-h-0"
-                >
-                  <div className="border-l-2 border-purple-600 overflow-hidden">
-                    <p className="p-3 text-gray-900">
-                      {item.answer}
-                    </p>
-                  </div>
-                </Transition>
-              </li>
-            ))}
-          </ul>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div
+                id={`faq-answer-${index}`}
+                role="region"
+                className={`transition-all duration-300 ease-in-out overflow-hidden ${activeIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                <div className="px-5 pb-5 border-t border-gray-100">
+                  <p className="text-sm text-gray-600 leading-relaxed pt-4">{item.answer}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-12 p-8 bg-green-50 rounded-2xl border border-green-100 animate-fade-up" style={{ animationDelay: '500ms' }}>
+          <h3 className="font-semibold text-gray-900 mb-2">Still have questions?</h3>
+          <p className="text-sm text-gray-500 mb-4">We're here to help. Reach out to our team.</p>
+          <a href="/contact" className="btn-primary inline-flex px-6 py-2.5 text-sm no-underline">
+            Contact Us
+          </a>
         </div>
       </div>
-    </main>
+    </div>
   );
 };
-
-const faqData = [
-  {
-    question: 'When will my order arrive?',
-    answer: 'Shipping time is set by our delivery partners, according to the delivery method chosen by you. Additional details can be found in the order confirmation.'
-  },
-  {
-    question: 'How do I track my order?',
-    answer: 'Once shipped, you’ll get a confirmation email that includes a tracking number and additional information regarding tracking your order.'
-  },
-  {
-    question: 'What’s your return policy?',
-    answer: 'We allow the return of all items within 30 days of your original order’s date. If you’re interested in returning your items, send us an email with your order number and we’ll ship a return label.'
-  },
-  {
-    question: 'How do I make changes to an existing order?',
-    answer: 'Changes to an existing order can be made as long as the order is still in “processing” status. Please contact our team via email and we’ll make sure to apply the needed changes. If your order has already been shipped, we cannot apply any changes to it. If you are unhappy with your order when it arrives, please contact us for any changes you may require.'
-  },
-  {
-    question: 'What shipping options do you have?',
-    answer: 'Through various delievery channnels.'
-  },
-  {
-    question: 'What payment methods do you accept?',
-    answer: 'Any method of payments acceptable by you. For example: We accept MasterCard, Visa, UPI, Direct Transfer etc.'
-  }
-];
 
 export default FAQ;

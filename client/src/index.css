@@ -1,3 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  /* Consistent button base with press feedback */
+  .btn-base {
+    @apply font-semibold rounded-xl transition-all duration-200 ease-out active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+  .btn-primary {
+    @apply btn-base bg-green-600 hover:bg-green-700 text-white shadow-sm hover:shadow-md focus-visible:ring-green-500;
+  }
+  .btn-secondary {
+    @apply btn-base bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 focus-visible:ring-gray-400;
+  }
+  .btn-danger {
+    @apply btn-base bg-white border border-red-200 text-red-600 hover:bg-red-50 focus-visible:ring-red-400;
+  }
+
+  /* Consistent input base */
+  .input-base {
+    @apply w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all;
+  }
+
+  /* Card with hover lift */
+  .card-hover {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300;
+  }
+}
+
+@layer utilities {
+  /* Stagger animation for card lists */
+  .animate-fade-up {
+    animation: fadeUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Scroll reveal for intersection observer */
+  .hidden-card {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hidden-card.show {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
