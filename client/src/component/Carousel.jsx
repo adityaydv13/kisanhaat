@@ -1,36 +1,24 @@
-// Carousel.js
-import React from 'react';
-import slide1 from '../assets/image/farmer3.jpg'; // Adjust the path if needed
+import slide1 from '../assets/image/farmer3.jpg';
 
 const Carousel = () => {
-    const slides = [slide1]; // Only one image
-    const progress = 100; // No need for dynamic progress since there's only one slide
-
-    return (
-        <div className="relative overflow-hidden" aria-label="Image carousel">
-            <div className="flex transition-transform duration-1000 ease-in-out">
-                {slides.map((src, index) => (
-                    <div key={index} className="w-full flex-shrink-0 h-40 flex items-center justify-center relative">
-                        <img 
-                            src={src} 
-                            alt={`Slide ${index + 1}`} 
-                            className="w-full h-full object-cover shadow-lg" // Apply shadow to the entire image
-                        />
-                        {/* Text Overlay */}
-                        <div className="hero-overlay bg-opacity-60 bg-black absolute top-0 left-0 w-full h-full  inset-0 flex items-center justify-center">
-                        <h1 className="text-white text-4xl font-bold  bg-opacity-50 p-2">
-                                KisanHaat
-                            </h1>
-                        </div>
-                    </div>
-                ))}   
-            </div>
-            {/* Optional bottom progress bar if needed */}
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-200">
-                <div className="h-full bg-blue-500" style={{ width: `${progress}%` }} />
-            </div>
+  return (
+    <div className="relative h-40 sm:h-48 md:h-64 overflow-hidden">
+      <img
+        src={slide1}
+        alt="KisanHaat - Farm Fresh Marketplace"
+        className="w-full h-full object-cover"
+        loading="lazy"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-green-900/80 to-green-800/40 flex items-center justify-center">
+        <div className="text-center px-4">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+            Kisan<span className="text-green-300">Haat</span>
+          </h1>
+          <p className="text-white/70 mt-2 text-xs sm:text-sm md:text-base">Farm Fresh, Direct Deals</p>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Carousel;

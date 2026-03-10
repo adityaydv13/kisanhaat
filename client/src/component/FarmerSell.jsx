@@ -1,50 +1,48 @@
-import React from 'react';
 import Vegetables from '../assets/image/Vegetables.png';
 import Pulses from '../assets/image/Pulses.png';
 import Rice1 from '../assets/image/Rice1.png';
 import Fruits from "../assets/image/Fruits.png";
 
+const categories = [
+  { name: 'Vegetables', image: Vegetables, desc: 'Fresh seasonal vegetables from local farms' },
+  { name: 'Pulses', image: Pulses, desc: 'High-quality pulses harvested fresh' },
+  { name: 'Rice', image: Rice1, desc: 'Premium quality rice varieties' },
+  { name: 'Fresh Fruits', image: Fruits, desc: 'Farm-fresh fruits picked at peak ripeness' },
+];
+
 function FarmerSell() {
   return (
-    <>
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold">What You Want to Sell?</h2>
-        <p className="text-gray-600">Choose from the fresh produce below:</p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src={Vegetables} alt="Vegetables" className="w-full h-36 object-cover" />
-          <div className="p-4">
-            <h3 className="text-lg font-bold text-gray-900">Vegetables</h3>
-            <p className="text-gray-600">Fresh vegetables available for sale.</p>
-          </div>
+    <section className="py-10 px-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">What Would You Like to Sell?</h2>
+          <p className="text-gray-500 mt-2">Choose from fresh produce categories below</p>
         </div>
-
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src={Pulses} alt="Pulses" className="w-full h-36 object-cover" />
-          <div className="p-4">
-            <h3 className="text-lg font-bold text-gray-900">Pulses</h3>
-            <p className="text-gray-600">High-quality pulses harvested fresh.</p>
-          </div>
-        </div>
-
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src={Rice1} alt="Rice" className="w-full h-36 object-cover" />
-          <div className="p-4">
-            <h3 className="text-lg font-bold text-gray-900">Rice</h3>
-            <p className="text-gray-600">Rice available for sale.</p>
-          </div>
-        </div>
-
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
-          <img src={Fruits} alt="Fresh Fruits" className="w-full h-36 object-cover" />
-          <div className="p-4">
-            <h3 className="text-lg font-bold text-gray-900">Fresh Fruits</h3>
-            <p className="text-gray-600">Fresh fruits available for sale.</p>
-          </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          {categories.map((item, i) => (
+            <div
+              key={item.name}
+              className="group card-hover overflow-hidden animate-fade-up"
+              style={{ animationDelay: `${i * 80}ms` }}
+            >
+              <div className="relative h-36 md:h-44 overflow-hidden">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+              </div>
+              <div className="p-4">
+                <h3 className="font-semibold text-gray-900 text-sm md:text-base">{item.name}</h3>
+                <p className="text-gray-500 text-xs md:text-sm mt-1 line-clamp-2">{item.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    </>
+    </section>
   );
 }
 

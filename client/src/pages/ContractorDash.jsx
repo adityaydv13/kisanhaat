@@ -1,207 +1,147 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-function StarRating({ rating }) {
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 !== 0;
+const StarRating = ({ rating }) => (
+  <div className="flex items-center gap-1">
+    {[...Array(5)].map((_, i) => (
+      <svg key={i} className={`w-4 h-4 ${i < Math.floor(rating) ? "text-amber-400" : "text-gray-200"}`} fill="currentColor" viewBox="0 0 20 20">
+        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+      </svg>
+    ))}
+    <span className="text-sm text-gray-500 ml-1">{rating.toFixed(1)}</span>
+  </div>
+);
 
-  return (
-    <div className="flex items-center">
-      {[...Array(5)].map((_, index) => (
-        <span
-          key={index}
-          className={`text-2xl ${
-            index < fullStars
-              ? 'text-yellow-400'
-              : index === fullStars && hasHalfStar
-              ? 'text-yellow-400'
-              : 'text-gray-300'
-          }`}
-        >
-          {index < fullStars || (index === fullStars && hasHalfStar) ? '★' : '☆'}
-        </span>
-      ))}
-      <span className="ml-2 text-gray-600">{rating.toFixed(1)}</span>
-    </div>
-  );
-}
-
-function ContractorDash() {
-  const [contractor, setContractor] = useState({ name: '', email: '' });
+const ContractorDash = () => {
+  const [contractor, setContractor] = useState({ name: "", email: "" });
   const [contracts, setContracts] = useState([]);
   const [successfulContracts, setSuccessfulContracts] = useState([]);
   const [ongoingDeals, setOngoingDeals] = useState([]);
 
   useEffect(() => {
-    fetchContractorDetails();
-    fetchContracts();
-    fetchSuccessfulContracts();
-    fetchOngoingDeals();
+    // Replace with actual API calls
+    setContractor({ name: "Rajiv Sharma", email: "rajiv@example.com" });
+    setContracts([
+      { id: 1, productName: "Tomatoes", farmer: "Madhav Verma", amount: "500" },
+      { id: 2, productName: "Potatoes", farmer: "Anil Kumar", amount: "600" },
+      { id: 3, productName: "Wheat", farmer: "Ram Singh", amount: "550" },
+    ]);
+    setSuccessfulContracts([
+      { id: 1, productName: "Tomatoes", farmer: "Madhav Verma", rating: 4.5, weight: 500 },
+      { id: 2, productName: "Potatoes", farmer: "Anil Kumar", rating: 5, weight: 1000 },
+    ]);
+    setOngoingDeals([
+      { id: 1, productName: "Apples", farmer: "Vikram Yadav", closedDate: "2024-05-15", expectedCompletion: "2024-09-15", status: "In Progress" },
+      { id: 2, productName: "Grapes", farmer: "Sanjay Gupta", closedDate: "2024-06-01", expectedCompletion: "2024-08-30", status: "Pending Delivery" },
+    ]);
   }, []);
 
-  const fetchContractorDetails = async () => {
-    // Replace with your API call
-    const contractorData = {
-      name: 'Rajiv Sharma',
-      email: 'rajiv@example.com',
-    };
-    setContractor(contractorData);
-  };
-
-  const fetchContracts = async () => {
-    // Replace with your API call
-    const contractsData = [
-      { id: 1, productName: 'Tomatoes', farmer: 'Madhav Verma', amount: '₹500' },
-      { id: 2, productName: 'Potatoes', farmer: 'Anil Kumar', amount: '₹600' },
-      { id: 3, productName: 'Wheat', farmer: 'Ram Singh', amount: '₹550' },
-      { id: 4, productName: 'Rice', farmer: 'Pawan Patel', amount: '₹700' },
-      { id: 5, productName: 'Onions', farmer: 'Mohan Lal', amount: '₹400' },
-      { id: 6, productName: 'Carrots', farmer: 'Suresh Pandey', amount: '₹450' },
-    ];
-    setContracts(contractsData);
-  };
-
-  const fetchSuccessfulContracts = async () => {
-    // Replace with your API call
-    const successfulContractsData = [
-      { id: 1, productName: 'Tomatoes', farmer: 'Madhav Verma', rating: 4.5, weight: 500 },
-      { id: 2, productName: 'Potatoes', farmer: 'Anil Kumar', rating: 5, weight: 1000 },
-      { id: 3, productName: 'Wheat', farmer: 'Ram Singh', rating: 4, weight: 2000 },
-      { id: 4, productName: 'Rice', farmer: 'Pawan Patel', rating: 4.8, weight: 1500 },
-    ];
-    setSuccessfulContracts(successfulContractsData);
-  };
-
-  const fetchOngoingDeals = async () => {
-    // Replace with your API call
-    const ongoingDealsData = [
-      { id: 1, productName: 'Apples', farmer: 'Vikram Yadav', closedDate: '2024-05-15', expectedCompletion: '2024-09-15', status: 'In Progress' },
-      { id: 2, productName: 'Grapes', farmer: 'Sanjay Gupta', closedDate: '2024-06-01', expectedCompletion: '2024-08-30', status: 'Pending Delivery' },
-      { id: 3, productName: 'Mangoes', farmer: 'Priya Sharma', closedDate: '2024-05-20', expectedCompletion: '2024-07-20', status: 'Quality Check' },
-    ];
-    setOngoingDeals(ongoingDealsData);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.location.href = '/login';
+  const statusColors = {
+    "In Progress": "bg-blue-50 text-blue-700 border-blue-200",
+    "Pending Delivery": "bg-amber-50 text-amber-700 border-amber-200",
+    "Quality Check": "bg-purple-50 text-purple-700 border-purple-200",
+    Completed: "bg-green-50 text-green-700 border-green-200",
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      {/* Contractor Details at the top */}
-      <div className="bg-blue-600 text-white p-6 mb-6">
-        <div className="container mx-auto">
-          <h1 className="text-3xl font-bold">Contractor Dashboard</h1>
-          <p className="text-xl mt-2">Welcome, {contractor.name}</p>
-          <p className="text-lg">Email: {contractor.email}</p>
-        </div>
+    <div className="max-w-5xl mx-auto px-4 py-10 space-y-8">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-green-700 to-green-600 rounded-2xl p-6 text-white">
+        <p className="text-green-200 text-sm font-medium">Contractor Dashboard</p>
+        <h1 className="text-2xl font-bold mt-1">Welcome, {contractor.name}</h1>
+        <p className="text-green-100 text-sm mt-1">{contractor.email}</p>
       </div>
 
-      <div className="container mx-auto px-4 mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Available Contracts</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {contracts.map((contract) => (
-            <div key={contract.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">{contract.productName}</h3>
-                <p className="text-gray-600 mb-4">Available contract for {contract.productName}.</p>
-                <div className="mb-4">
-                  <p className="font-semibold">Farmer: {contract.farmer}</p>
-                  <p className="text-gray-600">Amount Offered: {contract.amount}</p>
+      {/* Available Contracts */}
+      <section>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Available Contracts</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {contracts.map((c) => (
+            <div key={c.id} className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+              <h3 className="font-semibold text-gray-900">{c.productName}</h3>
+              <div className="mt-3 space-y-1 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Farmer</span>
+                  <span className="text-gray-900">{c.farmer}</span>
                 </div>
-                <div className="flex justify-end space-x-2">
-                  <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">
-                    Accept
-                  </button>
-                  <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
-                    Decline
-                  </button>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Amount</span>
+                  <span className="font-medium text-green-700">Rs. {c.amount}</span>
                 </div>
+              </div>
+              <div className="flex gap-3 mt-4 pt-3 border-t border-gray-100">
+                <button className="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-colors">Accept</button>
+                <button className="flex-1 py-2 bg-white border border-red-200 text-red-600 hover:bg-red-50 text-sm font-semibold rounded-xl transition-colors">Decline</button>
               </div>
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Ongoing Deals Table */}
-      <div className="container mx-auto px-4 mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Ongoing Deals</h2>
-        <div className="bg-white shadow-md rounded-lg overflow-hidden overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Farmer</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Closed Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Completion</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {ongoingDeals.map((deal) => (
-                <tr key={deal.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{deal.productName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{deal.farmer}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{deal.closedDate}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{deal.expectedCompletion}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      deal.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
-                      deal.status === 'Pending Delivery' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-green-100 text-green-800'
-                    }`}>
-                      {deal.status}
-                    </span>
-                  </td>
+      {/* Ongoing Deals */}
+      <section>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Ongoing Deals</h2>
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-100">
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Product</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Farmer</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Closed</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Expected</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {ongoingDeals.map((deal) => (
+                  <tr key={deal.id} className="hover:bg-gray-50/50">
+                    <td className="px-5 py-4 font-medium text-gray-900">{deal.productName}</td>
+                    <td className="px-5 py-4 text-gray-600">{deal.farmer}</td>
+                    <td className="px-5 py-4 text-gray-600">{deal.closedDate}</td>
+                    <td className="px-5 py-4 text-gray-600">{deal.expectedCompletion}</td>
+                    <td className="px-5 py-4">
+                      <span className={`text-xs font-semibold px-3 py-1 rounded-full border ${statusColors[deal.status] || ""}`}>
+                        {deal.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Successful Contracts Table */}
-      <div className="container mx-auto px-4 mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Successful Contracts</h2>
-        <div className="bg-white shadow-md rounded-lg overflow-hidden overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Farmer</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Weight (kg)</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rating</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {successfulContracts.map((contract) => (
-                <tr key={contract.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{contract.productName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{contract.farmer}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{contract.weight}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <StarRating rating={contract.rating} />
-                  </td>
+      {/* Successful Contracts */}
+      <section>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Successful Contracts</h2>
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-100">
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Product</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Farmer</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Weight (kg)</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase">Rating</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {successfulContracts.map((c) => (
+                  <tr key={c.id} className="hover:bg-gray-50/50">
+                    <td className="px-5 py-4 font-medium text-gray-900">{c.productName}</td>
+                    <td className="px-5 py-4 text-gray-600">{c.farmer}</td>
+                    <td className="px-5 py-4 text-gray-600">{c.weight}</td>
+                    <td className="px-5 py-4"><StarRating rating={c.rating} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-
-      {/* Logout Button at bottom right */}
-      <div className="container mx-auto px-4 py-4 mt-auto">
-        <div className="flex justify-end">
-          <button
-            className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        </div>
-      </div>
+      </section>
     </div>
   );
-}
+};
 
 export default ContractorDash;

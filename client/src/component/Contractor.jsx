@@ -1,15 +1,11 @@
-import React from 'react'
-import FetchPosts from './FetchPosts'
-import Carousel from './Carousel'
-import FarmerSell from './FarmerSell'
+import FetchPosts from "./FetchPosts";
+import Carousel from "./Carousel";
 
-function Contractor() {
-  return (
-    <>
-    <Carousel/>
-    <FetchPosts/>
-    </>
-  )
-}
+const Contractor = () => (
+  <>
+    <Carousel />
+    <FetchPosts />
+  </>
+);
 
-export default Contractor
+export default Contractor;
