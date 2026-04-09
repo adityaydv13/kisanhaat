@@ -7,6 +7,7 @@ const MachineryDetail = () => {
   const [searchName, setSearchName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [cart, setCart] = useState([]); // ✅ Store cart items
+  const [isLoading, setIsLoading] = useState(false); // ✅ Loading state
 
   // ✅ Load cart from localStorage on page load and fetch latest from DB
   useEffect(() => {
@@ -40,6 +41,7 @@ const MachineryDetail = () => {
       return;
     }
 
+    setIsLoading(true); // START LOADING
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/machinery?name=${searchName}`);
       if (response.data) {
@@ -52,6 +54,8 @@ const MachineryDetail = () => {
     } catch (error) {
       setMachine(null);
       setErrorMessage(error.response?.data?.message || 'Error fetching machinery.');
+    } finally {
+      setIsLoading(false); // STOP LOADING
     }
   };
 
@@ -105,7 +109,7 @@ const handleHire = async () => {
     const res = await axios.post(
       `${import.meta.env.VITE_API_URL}/api/hire`,
       { machineId: machine._id },
-      { headers: { Authorization: `Bearer ${token}` } }
+      { headers: { Authorization: `Bearer ${token}`} }
     );
     alert("Hire request sent!");
   } catch (err) {
@@ -124,12 +128,19 @@ const handleHire = async () => {
         value={searchName}
         onChange={(e) => setSearchName(e.target.value)}
       />
-      <button onClick={fetchMachinery}>Search</button>
+      <button onClick={fetchMachinery} disabled={isLoading}>Search</button>
     </div>
 
-    {errorMessage && <p className="error-message">{errorMessage}</p>}
+    {/* ✅ Loading Spinner */}
+    {isLoading && (
+      <div className="loader-container">
+        <div className="loader"></div>
+      </div>
+    )}
 
-    {machine && (
+    {errorMessage && !isLoading && <p className="error-message">{errorMessage}</p>}
+
+    {machine && !isLoading && (
       <div className="machine-details">
         <h3>{machine.name}</h3>
         <p>{machine.description}</p>

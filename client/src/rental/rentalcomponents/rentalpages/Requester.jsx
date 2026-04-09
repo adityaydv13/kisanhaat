@@ -59,6 +59,24 @@ const MyRequests = () => {
     }
   };
 
+  const handlePay = async (hireId, price) => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/pay/create`,
+        { amount: price, hireId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data && res.data.redirectUrl) {
+        window.location.href = res.data.redirectUrl;
+      } else {
+        alert("Payment URL not received.");
+      }
+    } catch (err) {
+      console.error("Error paying:", err);
+      alert("Payment failed.");
+    }
+  };
+
   const handledelete = async (hireId) => {
     try {
       await axios.delete(
@@ -112,6 +130,8 @@ const MyRequests = () => {
                   color:
                     r.status === "approved"
                       ? "green"
+                      : r.status === "paid"
+                      ? "blue"
                       : r.status === "rejected"
                       ? "red"
                       : "orange",
@@ -172,7 +192,7 @@ const MyRequests = () => {
             }}
           >
             {hires
-              .filter((hire) => hire.status === "approved")
+              .filter((hire) => hire.status === "approved" || hire.status === "paid")
               .map((hire) => (
                 <div
                   key={hire._id}
@@ -228,6 +248,23 @@ const MyRequests = () => {
                   >
                     Delete
                   </button>
+                  {hire.status === "approved" && (
+                    <button
+                      onClick={() => handlePay(hire._id, hire.machineId?.price)}
+                      style={{
+                        width: "100%",
+                        marginTop: "10px",
+                        padding: "10px",
+                        backgroundColor: "#007BFF",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Pay
+                    </button>
+                  )}
                 </div>
               ))}
           </div>
