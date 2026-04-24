@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import DeleteAccount from "../pages/RemoveUser";
+import axios from "axios";
 
 const Navbar = ({ isAuthenticated, handleLogout, onSwitchRole }) => {
   const [userName, setUserName] = useState("");
@@ -60,6 +61,18 @@ const Navbar = ({ isAuthenticated, handleLogout, onSwitchRole }) => {
 
   const logout = async () => {
     try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          // Delete all crop posts added by the user so others cannot see or update them
+          await axios.delete(`${import.meta.env.VITE_API_URL}/api/posts/my-posts`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        } catch (err) {
+          console.error("Failed to delete posts on logout:", err);
+        }
+      }
+
       await handleLogout?.();
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
