@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import FarmerSell from './FarmerSell';
+import MarketPrices from './MarketPrices';
 import farmer3 from '../assets/image/farmer3.jpg'
 
 import Vegetables from '../assets/image/Vegetables.png';
@@ -261,6 +262,8 @@ const CreatePost = () => {
         </div>
         <FarmerPosts token={token} onDelete={handleDelete} onUpdate={handleUpdate} />
       </div>
+
+      <MarketPrices />
 
       {/* Modal for confirmation */}
       {isModalOpen && (

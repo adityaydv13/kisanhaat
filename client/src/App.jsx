@@ -26,6 +26,19 @@ import MyRequests from "./rental/rentalcomponents/rentalpages/Requester";
 import CheckoutButton from "./component/CheckoutButton";
 import PaymentReturn from "./pages/PaymentReturn";
 
+// Layout wrapper defined outside App to prevent remounting on state changes
+const AppLayout = ({ children, isAuthenticated, handleLogout, userRole, toggleRole }) => (
+  <div>
+    <Navbar 
+      isAuthenticated={isAuthenticated} 
+      handleLogout={handleLogout} 
+      userRole={userRole}        
+      onSwitchRole={toggleRole}  
+    />
+    <div>{children}</div>
+  </div>
+);
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState("farmer");  // ✅ keep role here
@@ -42,21 +55,10 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("user");
     setIsAuthenticated(false);
   };
 
-  // Layout wrapper ensures navbar/header is always visible
-  const Layout = ({ children }) => (
-    <div>
-      <Navbar 
-        isAuthenticated={isAuthenticated} 
-        handleLogout={handleLogout} 
-        userRole={userRole}        
-        onSwitchRole={toggleRole}  
-      />
-      <div>{children}</div>
-    </div>
-  );
 
   return (
     <Router>
@@ -69,19 +71,19 @@ function App() {
         <Route 
           path="/" 
           element={
-            <Layout>
+            <AppLayout isAuthenticated={isAuthenticated} handleLogout={handleLogout} userRole={userRole} toggleRole={toggleRole}>
               <Home userRole={userRole} setUserRole={setUserRole} />
-            </Layout>
+            </AppLayout>
           } 
         />
 
         {/* Payment Routes */}
-        <Route path="/checkout" element={<Layout><CheckoutButton /></Layout>} />
-        <Route path="/payment-return" element={<Layout><PaymentReturn /></Layout>} />
+        <Route path="/checkout" element={<AppLayout isAuthenticated={isAuthenticated} handleLogout={handleLogout} userRole={userRole} toggleRole={toggleRole}><CheckoutButton /></AppLayout>} />
+        <Route path="/payment-return" element={<AppLayout isAuthenticated={isAuthenticated} handleLogout={handleLogout} userRole={userRole} toggleRole={toggleRole}><PaymentReturn /></AppLayout>} />
 
         {/* Other Pages */}
-        <Route path="/faq" element={<Layout><FAQ /></Layout>} />
-        <Route path="/contact" element={<Layout><Contact /></Layout>} />
+        <Route path="/faq" element={<AppLayout isAuthenticated={isAuthenticated} handleLogout={handleLogout} userRole={userRole} toggleRole={toggleRole}><FAQ /></AppLayout>} />
+        <Route path="/contact" element={<AppLayout isAuthenticated={isAuthenticated} handleLogout={handleLogout} userRole={userRole} toggleRole={toggleRole}><Contact /></AppLayout>} />
 
 
        {/* Bids */}
@@ -92,25 +94,25 @@ function App() {
         <Route
           path="/profile"
           element={
-            <Layout>
+            <AppLayout isAuthenticated={isAuthenticated} handleLogout={handleLogout} userRole={userRole} toggleRole={toggleRole}>
               {isAuthenticated ? <Profile handleLogout={handleLogout} /> : <Navigate to="/login" />}
-            </Layout>
+            </AppLayout>
           }
         />
 
         {/* Rental Routes */}
-        <Route path="/rentalhome" element={<Layout><Hhome /></Layout>} />
-        <Route path="/machinerylist" element={<Layout><MachineryList /></Layout>} />
-        <Route path="/hire-machine" element={<Layout><MachineryDetail /></Layout>} />
-        <Route path="/category/:categoryName" element={<Layout><CategoryPage /></Layout>} />
+        <Route path="/rentalhome" element={<AppLayout isAuthenticated={isAuthenticated} handleLogout={handleLogout} userRole={userRole} toggleRole={toggleRole}><Hhome /></AppLayout>} />
+        <Route path="/machinerylist" element={<AppLayout isAuthenticated={isAuthenticated} handleLogout={handleLogout} userRole={userRole} toggleRole={toggleRole}><MachineryList /></AppLayout>} />
+        <Route path="/hire-machine" element={<AppLayout isAuthenticated={isAuthenticated} handleLogout={handleLogout} userRole={userRole} toggleRole={toggleRole}><MachineryDetail /></AppLayout>} />
+        <Route path="/category/:categoryName" element={<AppLayout isAuthenticated={isAuthenticated} handleLogout={handleLogout} userRole={userRole} toggleRole={toggleRole}><CategoryPage /></AppLayout>} />
 
         {/* Requests (protected) */}
         <Route
           path="/requests"
           element={
-            <Layout>
+            <AppLayout isAuthenticated={isAuthenticated} handleLogout={handleLogout} userRole={userRole} toggleRole={toggleRole}>
               {isAuthenticated ? <MyRequests /> : <Navigate to="/login" />}
-            </Layout>
+            </AppLayout>
           }
         />
 

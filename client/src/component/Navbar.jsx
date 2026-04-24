@@ -6,8 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import DeleteAccount from "../pages/RemoveUser";
 
-const Navbar = ({ handleLogout, onSwitchRole }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+const Navbar = ({ isAuthenticated, handleLogout, onSwitchRole }) => {
   const [userName, setUserName] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRefMobile = useRef(null);
@@ -16,49 +15,35 @@ const Navbar = ({ handleLogout, onSwitchRole }) => {
   const userString = localStorage.getItem("user");
   const userId = userString ? JSON.parse(userString)._id : null;
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     try {
-  //       const decoded = jwtDecode(token);
-  //       setIsLoggedIn(true);
-  //       setUserName(decoded?.name || decoded?.username || "User");
-  //     } catch {
-  //       setIsLoggedIn(false);
-  //       setUserName("");
-  //     }
-  //   }
-  // }, []);
+
   useEffect(() => {
-  // 1️⃣ Prefer user object stored in localStorage
-  const storedUser = localStorage.getItem("user");
-
-  if (storedUser) {
-    try {
-      const userObj = JSON.parse(storedUser);
-      if (userObj?.name) {
-        setIsLoggedIn(true);
-        setUserName(userObj.name);
-        return; // stop further checks
+    if (isAuthenticated) {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+          const userObj = JSON.parse(storedUser);
+          if (userObj?.name) {
+            setUserName(userObj.name);
+            return;
+          }
+        } catch (err) {
+          console.error("Failed to parse stored user:", err);
+        }
       }
-    } catch (err) {
-      console.error("Failed to parse stored user:", err);
-    }
-  }
 
-  // 2️⃣ Fallback to decoding JWT
-  const token = localStorage.getItem("token");
-  if (token) {
-    try {
-      const decoded = jwtDecode(token);
-      setIsLoggedIn(true);
-      setUserName(decoded?.name || "User");
-    } catch {
-      setIsLoggedIn(false);
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          setUserName(decoded?.name || "User");
+        } catch {
+          setUserName("");
+        }
+      }
+    } else {
       setUserName("");
     }
-  }
-}, []);
+  }, [isAuthenticated]);
 
 // changed till here
 
@@ -78,7 +63,7 @@ const Navbar = ({ handleLogout, onSwitchRole }) => {
       await handleLogout?.();
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
-      setIsLoggedIn(false);
+      localStorage.removeItem("user");
       setUserName("");
       navigate("/");
     } catch (error) {
@@ -112,7 +97,7 @@ const Navbar = ({ handleLogout, onSwitchRole }) => {
           <Link to="/contact" className={navLink}>Contact</Link>
           <Link to="/requests" className={navLink}>Requests</Link>
 
-          {isLoggedIn && (
+          {isAuthenticated && (
             <>
               <Link to="/received-bids" className={navLink}>Received Bids</Link>
               <Link to="/my-bids" className={navLink}>My Bids</Link>
@@ -123,7 +108,8 @@ const Navbar = ({ handleLogout, onSwitchRole }) => {
                 onDelete={() => {
                   localStorage.removeItem("token");
                   localStorage.removeItem("userId");
-                  setIsLoggedIn(false);
+                  localStorage.removeItem("user");
+                  handleLogout?.();
                   navigate("/");
                 }}
               >
@@ -133,12 +119,12 @@ const Navbar = ({ handleLogout, onSwitchRole }) => {
             </>
           )}
 
-          {!isLoggedIn && (
+          {!isAuthenticated && (
             <Link to="/login" className={navLink}>Login</Link>
           )}
 
           {/* Username pinned at the rightmost end */}
-          {isLoggedIn && (
+          {isAuthenticated && (
             <span className="ml-1 text-sm text-white-800">{userName}</span>
           )}
         </div>
@@ -167,7 +153,7 @@ const Navbar = ({ handleLogout, onSwitchRole }) => {
             <Link to="/contact" className={navLink} onClick={() => setMenuOpen(false)}>Contact</Link>
             <Link to="/requests" className={navLink} onClick={() => setMenuOpen(false)}>Requests</Link>
 
-            {isLoggedIn && (
+            {isAuthenticated && (
               <>
                 <Link to="/received-bids" className={navLink} onClick={() => setMenuOpen(false)}>Received Bids</Link>
                 <Link to="/my-bids" className={navLink} onClick={() => setMenuOpen(false)}>My Bids</Link>
@@ -178,7 +164,8 @@ const Navbar = ({ handleLogout, onSwitchRole }) => {
                   onDelete={() => {
                     localStorage.removeItem("token");
                     localStorage.removeItem("userId");
-                    setIsLoggedIn(false);
+                    localStorage.removeItem("user");
+                    handleLogout?.();
                     setMenuOpen(false);
                     navigate("/");
                   }}
@@ -190,7 +177,7 @@ const Navbar = ({ handleLogout, onSwitchRole }) => {
               </>
             )}
 
-            {!isLoggedIn && (
+            {!isAuthenticated && (
               <Link to="/login" className={navLink} onClick={() => setMenuOpen(false)}>Login</Link>
             )}
           </div>
